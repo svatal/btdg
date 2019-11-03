@@ -46,6 +46,7 @@ export class Creeper {
   appearsAtTime: number;
   velocity: number;
 
+  maxHitPoints: number;
   @observable hitPoints: number;
   @observable hitAtTime: number | undefined = undefined;
 
@@ -132,5 +133,6 @@ export class Creeper {
     this.appearsAtTime = appearsAtTime;
     this.velocity = velocity;
     this.hitPoints = hitPoints;
+    this.maxHitPoints = hitPoints;
   }
 }

@@ -3,16 +3,26 @@ import { Creeper, CreeperStateEnum, creeperEasingTime } from "../model/creeper";
 import { model } from "../model/model";
 
 export function OnMapCreeper(props: { creeper: Creeper }) {
-  const creeperState = props.creeper.getState();
+  const creeper = props.creeper;
+  const creeperState = creeper.getState();
   switch (creeperState.state) {
     case CreeperStateEnum.Moving:
       return (
-        <circle
-          cx={creeperState.position.x}
-          cy={creeperState.position.y}
-          r="10"
-          fill="red"
-        />
+        <>
+          <circle
+            cx={creeperState.position.x}
+            cy={creeperState.position.y}
+            r="10"
+            fill="red"
+          />
+          <rect
+            x={creeperState.position.x - 10}
+            y={creeperState.position.y - 13}
+            height="2"
+            width={(20 * creeper.hitPoints) / creeper.maxHitPoints}
+            fill="red"
+          />
+        </>
       );
     case CreeperStateEnum.Finished:
       if (creeperState.finishedAtTime + creeperEasingTime > model.time) {
