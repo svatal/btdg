@@ -1,5 +1,5 @@
 import * as b from "bobril";
-import { model } from "./model";
+import { model } from "./model/model";
 
 export const App = () => {
   return (

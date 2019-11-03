@@ -1,6 +1,7 @@
 import * as b from "bobril";
-import { model, Creeper } from "./model";
+import { model } from "./model/model";
 import { App } from "./app";
+import { Creeper } from "./model/creeper";
 
 model.creepers = Array.from(Array(10).keys()).map(
   i => new Creeper(b.now() + 500 * i, 0.2)

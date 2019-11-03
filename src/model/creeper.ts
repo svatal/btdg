@@ -1,25 +1,6 @@
 import { observable, computed } from "bobx";
-
-class Model {
-  @observable time: number;
-  @computed isRunning() {
-    console.log("isRunning?");
-    return this.creepers.some(creep => !creep.isFinished());
-  }
-
-  creeperPath: IPosition[] = [
-    { x: 100, y: 100 },
-    { x: 1100, y: 100 },
-    { x: 1100, y: 300 },
-    { x: 100, y: 300 }
-  ];
-  creepers: Creeper[];
-}
-
-interface IPosition {
-  x: number;
-  y: number;
-}
+import { IPosition } from "./base";
+import { model } from "./model";
 
 interface ICreeperPosition extends IPosition {
   calculatedAtTime: number;
@@ -82,5 +63,3 @@ export class Creeper {
     this.velocity = velocity;
   }
 }
-
-export const model = new Model();
