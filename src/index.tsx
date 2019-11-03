@@ -7,7 +7,10 @@ import { Tower } from "./model/tower";
 model.creepers = Array.from(Array(10).keys()).map(
   i => new Creeper(b.now() + 500 * i, 0.2, 100)
 );
-model.towers = [new Tower({ x: 1000, y: 200 }, 200, 500, 25)];
+model.towers = [
+  new Tower({ x: 1000, y: 200 }, 200, 500, 25),
+  new Tower({ x: 300, y: 200 }, 150, 1000, 50)
+];
 
 const startTime = b.now();
 model.time = startTime;
