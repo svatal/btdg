@@ -7,7 +7,20 @@ class Model {
   @observable time: number = 0;
   @computed isRunning() {
     console.log("isRunning?");
-    return this.creepers.some(creep => !creep.isFinished());
+    return this.creepers.some(creep => !creep.hasAnimationFinished());
+  }
+
+  @computed getScore() {
+    console.log("getScore");
+    return this.creepers.reduce(
+      (acc, creeper) => (creeper.isKilled() ? acc + creeper.score : acc),
+      0
+    );
+  }
+
+  @computed getLives() {
+    console.log("getLives");
+    return 20 - this.creepers.filter(creeper => creeper.isFinished()).length;
   }
 
   creeperPath: IPosition[] = [

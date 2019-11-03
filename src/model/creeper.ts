@@ -45,6 +45,7 @@ type CreeperState =
 export class Creeper {
   appearsAtTime: number;
   velocity: number;
+  score = 100;
 
   maxHitPoints: number;
   @observable hitPoints: number;
@@ -120,13 +121,23 @@ export class Creeper {
     };
   }
 
-  @computed isFinished() {
+  @computed hasAnimationFinished() {
     const state = this.getState();
     return (
       state.state === CreeperStateEnum.Killed ||
       (state.state === CreeperStateEnum.Finished &&
         model.time - state.finishedAtTime > creeperEasingTime)
     );
+  }
+
+  @computed isFinished() {
+    const state = this.getState();
+    return state.state === CreeperStateEnum.Finished;
+  }
+
+  @computed isKilled() {
+    const state = this.getState();
+    return state.state === CreeperStateEnum.Killed;
   }
 
   constructor(appearsAtTime: number, velocity: number, hitPoints: number) {

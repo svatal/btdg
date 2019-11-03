@@ -27,6 +27,8 @@ b.init(() => {
     <>
       {model.time - startTime} {model.isRunning() ? "running" : "stopped"}{" "}
       {Math.round(1000 / (renderStartTime - prevTime))} fps
+      <br />
+      Lives: {model.getLives()} Score: {model.getScore()}
       <App />
     </>
   );
