@@ -15,6 +15,10 @@ class Model {
     { x: 1100, y: 300 },
     { x: 100, y: 300 }
   ];
+  @computed getFinalPosition() {
+    return this.creeperPath[this.creeperPath.length - 1];
+  }
+
   creepers: Creeper[] = [];
 }
 
