@@ -2,10 +2,12 @@ import * as b from "bobril";
 import { model } from "./model/model";
 import { App } from "./app";
 import { Creeper } from "./model/creeper";
+import { Tower } from "./model/tower";
 
 model.creepers = Array.from(Array(10).keys()).map(
-  i => new Creeper(b.now() + 500 * i, 0.2)
+  i => new Creeper(b.now() + 500 * i, 0.2, 100)
 );
+model.towers = [new Tower({ x: 1000, y: 200 }, 200, 500, 25)];
 
 const startTime = b.now();
 model.time = startTime;

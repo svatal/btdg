@@ -1,6 +1,7 @@
 import { observable, computed } from "bobx";
 import { IPosition } from "./base";
 import { Creeper } from "./creeper";
+import { Tower } from "./tower";
 
 class Model {
   @observable time: number = 0;
@@ -20,6 +21,7 @@ class Model {
   }
 
   creepers: Creeper[] = [];
+  towers: Tower[] = [];
 }
 
 export const model = new Model();

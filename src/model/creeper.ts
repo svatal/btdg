@@ -1,8 +1,9 @@
-import { computed } from "bobx";
-import { IPosition } from "./base";
+import { computed, observable } from "bobx";
+import { IPosition, getDistance } from "./base";
 import { model } from "./model";
 
 export const creeperEasingTime = 500;
+const hitFreezeTime = 100;
 
 interface ICreeperPosition extends IPosition {
   calculatedAtTime: number;
@@ -12,7 +13,7 @@ interface ICreeperPosition extends IPosition {
 export enum CreeperStateEnum {
   Waiting,
   Moving,
-  // Killed,
+  Killed,
   Finished
 }
 
@@ -30,15 +31,38 @@ interface IFinishedCreeper {
   finishedAtTime: number;
 }
 
-type CreeperState = IWaitingCreeper | IMovingCreeper | IFinishedCreeper;
+interface IDeadCreeper {
+  state: CreeperStateEnum.Killed;
+  killedAtTime: number;
+}
+
+type CreeperState =
+  | IWaitingCreeper
+  | IMovingCreeper
+  | IFinishedCreeper
+  | IDeadCreeper;
 
 export class Creeper {
   appearsAtTime: number;
   velocity: number;
+
+  @observable hitPoints: number;
+  @observable hitAtTime: number | undefined = undefined;
+
+  hit(damage: number) {
+    this.hitPoints -= damage;
+    this.hitAtTime = model.time;
+  }
+
   private _lastKnownPosition: ICreeperPosition | undefined = undefined;
 
   @computed getState(): CreeperState {
     // console.log('calculating creeper position', model.time)
+    if (this.hitPoints <= 0)
+      return {
+        state: CreeperStateEnum.Killed,
+        killedAtTime: this.hitAtTime!
+      };
     if (
       this._lastKnownPosition !== undefined &&
       this._lastKnownPosition.pathFragmentIdx === model.creeperPath.length
@@ -54,13 +78,15 @@ export class Creeper {
       calculatedAtTime: this.appearsAtTime,
       pathFragmentIdx: 1
     };
+    const moveStartTime = Math.max(
+      position.calculatedAtTime,
+      this.hitAtTime ? this.hitAtTime + hitFreezeTime : 0
+    );
     let availableDistance =
-      this.velocity * (model.time - position.calculatedAtTime);
+      this.velocity * Math.max(model.time - moveStartTime, 0);
     while (position.pathFragmentIdx < model.creeperPath.length) {
       const target = model.creeperPath[position.pathFragmentIdx];
-      const distanceToTarget = Math.sqrt(
-        Math.pow(target.x - position.x, 2) + Math.pow(target.y - position.y, 2)
-      );
+      const distanceToTarget = getDistance(target, position);
       // console.log("availableDistance", availableDistance, "distanceToTarget", distanceToTarget, position)
       if (distanceToTarget <= availableDistance) {
         availableDistance -= distanceToTarget;
@@ -96,13 +122,15 @@ export class Creeper {
   @computed isFinished() {
     const state = this.getState();
     return (
-      state.state === CreeperStateEnum.Finished &&
-      model.time - state.finishedAtTime > creeperEasingTime
+      state.state === CreeperStateEnum.Killed ||
+      (state.state === CreeperStateEnum.Finished &&
+        model.time - state.finishedAtTime > creeperEasingTime)
     );
   }
 
-  constructor(appearsAtTime: number, velocity: number) {
+  constructor(appearsAtTime: number, velocity: number, hitPoints: number) {
     this.appearsAtTime = appearsAtTime;
     this.velocity = velocity;
+    this.hitPoints = hitPoints;
   }
 }
