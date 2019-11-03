@@ -9,8 +9,8 @@ export const App = () => {
         .filter(creep => creep.getPosition() !== undefined)
         .map(creep => (
           <circle
-            cx={creep.getPosition().x}
-            cy={creep.getPosition().y}
+            cx={creep.getPosition()!.x}
+            cy={creep.getPosition()!.y}
             r="10"
             fill="red"
           />

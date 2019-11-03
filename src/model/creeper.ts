@@ -1,4 +1,4 @@
-import { observable, computed } from "bobx";
+import { computed } from "bobx";
 import { IPosition } from "./base";
 import { model } from "./model";
 

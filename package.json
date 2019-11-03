@@ -11,5 +11,16 @@
   "dependencies": {
     "bobril": "^13.1.0",
     "bobx": "^0.27.1"
+  },
+  "bobril": {
+    "title": "Boring Tower Defense Game",
+    "tsconfigUpdate": true,
+    "compilerOptions": {
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "strict": true
+    }
   }
 }

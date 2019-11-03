@@ -3,7 +3,7 @@ import { IPosition } from "./base";
 import { Creeper } from "./creeper";
 
 class Model {
-  @observable time: number;
+  @observable time: number = 0;
   @computed isRunning() {
     console.log("isRunning?");
     return this.creepers.some(creep => !creep.isFinished());
@@ -15,7 +15,7 @@ class Model {
     { x: 1100, y: 300 },
     { x: 100, y: 300 }
   ];
-  creepers: Creeper[];
+  creepers: Creeper[] = [];
 }
 
 export const model = new Model();
