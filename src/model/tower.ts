@@ -2,6 +2,7 @@ import { computed } from "bobx";
 import { IPosition, getDistance } from "./base";
 import { model } from "./model";
 import { CreeperStateEnum } from "./creeper";
+import { time } from "./time";
 
 export const shotEasingTime = 200;
 
@@ -41,12 +42,12 @@ export class Tower {
   @computed getState(): TowerState {
     if (
       this.lastShot !== undefined &&
-      this.lastShot.firedAtTime + shotEasingTime >= model.time
+      this.lastShot.firedAtTime + shotEasingTime >= time.gameTime
     )
       return { state: TowerStateEnum.Shooting, lastShot: this.lastShot };
     if (
       this.lastShot !== undefined &&
-      this.lastShot.firedAtTime + this.fireRate >= model.time
+      this.lastShot.firedAtTime + this.fireRate >= time.gameTime
     )
       return { state: TowerStateEnum.Reloading };
     const creepers = this.getCreepersInRange();
@@ -57,7 +58,7 @@ export class Tower {
         this.lastShot = {
           x: creeperState.position.x,
           y: creeperState.position.y,
-          firedAtTime: model.time
+          firedAtTime: time.gameTime
         };
         // TODO: find a better way - update needs to be postponed otherwise we are changing data that the calculation is based on
         setTimeout(() => creeper.hit(this.damage), 0);

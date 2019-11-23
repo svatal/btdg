@@ -1,13 +1,12 @@
-import { observable, computed } from "bobx";
+import { computed } from "bobx";
 import { IPosition } from "./base";
 import { Creeper } from "./creeper";
 import { Tower } from "./tower";
 
 class Model {
-  @observable time: number = 0;
-  @computed isRunning() {
-    console.log("isRunning?");
-    return this.creepers.some(creep => !creep.hasAnimationFinished());
+  @computed isFinished() {
+    console.log("isFinished?");
+    return this.creepers.every(creep => creep.hasAnimationFinished());
   }
 
   @computed getScore() {

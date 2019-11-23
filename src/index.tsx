@@ -3,45 +3,36 @@ import { model } from "./model/model";
 import { App } from "./app";
 import { Creeper } from "./model/creeper";
 import { Tower } from "./model/tower";
+import { time } from "./model/time";
+import { Button } from "./view/button";
 
 model.creepers = Array.from(Array(10).keys()).map(
-  i => new Creeper(b.now() + 500 * i, 0.2, 100)
+  i => new Creeper(500 * i, 0.2, 100)
 );
 model.towers = [
   new Tower({ x: 1000, y: 200 }, 200, 500, 25),
   new Tower({ x: 300, y: 200 }, 150, 1000, 50)
 ];
 
-const startTime = b.now();
-model.time = startTime;
-
-let maxRenderTime = 0;
-
 b.init(() => {
-  const renderStartTime = b.now();
-  const prevTime = model.time;
-  if (model.isRunning()) {
-    model.time = renderStartTime;
-  }
+  const lastFrameDuration = b.lastFrameDuration();
+
   const result = (
     <>
-      {model.time - startTime} {model.isRunning() ? "running" : "stopped"}{" "}
-      {Math.round(1000 / (renderStartTime - prevTime))} fps
+      {lastFrameDuration} {model.isFinished() ? "finished" : "running"}{" "}
+      {Math.min(60, Math.round(1000 / lastFrameDuration))} fps
+      {time.isRunning() ? (
+        <Button text="Pause" onClick={() => time.pause()} />
+      ) : (
+        <Button text="Start/Resume" onClick={() => time.start()} />
+      )}
       <br />
       Lives: {model.getLives()} Score: {model.getScore()}
       <App />
     </>
   );
-  const renderTime = b.now() - renderStartTime;
-  maxRenderTime = Math.max(maxRenderTime, renderTime);
-  console.log(
-    "frame",
-    "time taken:",
-    renderTime,
-    "max time taken:",
-    maxRenderTime,
-    "time since last frame",
-    renderStartTime - prevTime
-  );
+  if (!model.isFinished()) {
+    time.tick();
+  }
   return result;
 });

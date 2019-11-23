@@ -1,6 +1,7 @@
 import * as b from "bobril";
 import { Creeper, CreeperStateEnum, creeperEasingTime } from "../model/creeper";
 import { model } from "../model/model";
+import { time } from "../model/time";
 
 export function OnMapCreeper(props: { creeper: Creeper }) {
   const creeper = props.creeper;
@@ -25,7 +26,7 @@ export function OnMapCreeper(props: { creeper: Creeper }) {
         </>
       );
     case CreeperStateEnum.Finished:
-      if (creeperState.finishedAtTime + creeperEasingTime > model.time) {
+      if (creeperState.finishedAtTime + creeperEasingTime > time.gameTime) {
         const position = model.getFinalPosition();
         return (
           <circle
@@ -47,7 +48,8 @@ function easeOut(finishedAtTime: number) {
   return (
     20 *
     Math.sin(
-      (((model.time - finishedAtTime) / creeperEasingTime) * Math.PI * 5) / 6 +
+      (((time.gameTime - finishedAtTime) / creeperEasingTime) * Math.PI * 5) /
+        6 +
         Math.PI / 6
     )
   );

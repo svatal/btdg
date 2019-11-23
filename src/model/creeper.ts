@@ -1,6 +1,7 @@
 import { computed, observable } from "bobx";
 import { IPosition, getDistance } from "./base";
 import { model } from "./model";
+import { time } from "./time";
 
 export const creeperEasingTime = 500;
 const hitFreezeTime = 100;
@@ -53,7 +54,7 @@ export class Creeper {
 
   hit(damage: number) {
     this.hitPoints -= damage;
-    this.hitAtTime = model.time;
+    this.hitAtTime = time.gameTime;
   }
 
   private _lastKnownPosition: ICreeperPosition | undefined = undefined;
@@ -73,7 +74,7 @@ export class Creeper {
         state: CreeperStateEnum.Finished,
         finishedAtTime: this._lastKnownPosition.calculatedAtTime
       };
-    if (this.appearsAtTime >= model.time)
+    if (this.appearsAtTime >= time.gameTime)
       return { state: CreeperStateEnum.Waiting };
     let position: ICreeperPosition = this._lastKnownPosition || {
       ...model.creeperPath[0],
@@ -85,7 +86,7 @@ export class Creeper {
       this.hitAtTime ? this.hitAtTime + hitFreezeTime : 0
     );
     let availableDistance =
-      this.velocity * Math.max(model.time - moveStartTime, 0);
+      this.velocity * Math.max(time.gameTime - moveStartTime, 0);
     while (position.pathFragmentIdx < model.creeperPath.length) {
       const target = model.creeperPath[position.pathFragmentIdx];
       const distanceToTarget = getDistance(target, position);
@@ -95,7 +96,7 @@ export class Creeper {
         position = {
           ...target,
           pathFragmentIdx: position.pathFragmentIdx + 1,
-          calculatedAtTime: model.time - availableDistance / this.velocity
+          calculatedAtTime: time.gameTime - availableDistance / this.velocity
         };
         continue;
       }
@@ -106,7 +107,7 @@ export class Creeper {
       this._lastKnownPosition = {
         x: position.x + Math.cos(direction) * availableDistance,
         y: position.y + Math.sin(direction) * availableDistance,
-        calculatedAtTime: model.time,
+        calculatedAtTime: time.gameTime,
         pathFragmentIdx: position.pathFragmentIdx
       };
       return {
@@ -126,7 +127,7 @@ export class Creeper {
     return (
       state.state === CreeperStateEnum.Killed ||
       (state.state === CreeperStateEnum.Finished &&
-        model.time - state.finishedAtTime > creeperEasingTime)
+        time.gameTime - state.finishedAtTime > creeperEasingTime)
     );
   }
 

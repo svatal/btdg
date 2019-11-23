@@ -1,6 +1,6 @@
 import * as b from "bobril";
 import { Tower, TowerStateEnum, shotEasingTime } from "../model/tower";
-import { model } from "../model/model";
+import { time } from "../model/time";
 
 export function OnMapTower(props: { tower: Tower }) {
   const tower = props.tower;
@@ -26,7 +26,7 @@ export function OnMapTower(props: { tower: Tower }) {
           stroke-width={
             3 *
             Math.sin(
-              ((model.time - towerState.lastShot.firedAtTime) /
+              ((time.gameTime - towerState.lastShot.firedAtTime) /
                 shotEasingTime) *
                 Math.PI
             )
